@@ -1,6 +1,4 @@
 version: 2
-update_configs:
-    - automerged_updates: true
 updates:
     # Enable version updates for Gradle
     - package-ecosystem: "maven"
