@@ -3,6 +3,7 @@ package org.emeraldcraft.jdamcinfo.Listeners;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.Button;
 import org.emeraldcraft.jdamcinfo.Bot;
 import org.emeraldcraft.jdamcinfo.ServerInfo;
 
@@ -35,10 +36,11 @@ public class onCommandReceive extends ListenerAdapter {
             }
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setAuthor(serverInfo.getServerName());
-            embedBuilder.setTitle(":x: Sorry, but the minecraft server is currently offline!");
+            embedBuilder.setTitle(":no_entry_sign:  Sorry, but the server is currently offline! :no_entry_sign: ");
             embedBuilder.setFooter("Results may be cached for up to " + cache + " seconds. \nMade by EmerqldWither");
             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
             lastRanCommand = (System.currentTimeMillis() + (cache * 1000L));
+
         }
         if(event.getSubcommandName().equalsIgnoreCase("info")) {
             EmbedBuilder messageEmbed = new EmbedBuilder();
@@ -57,21 +59,25 @@ public class onCommandReceive extends ListenerAdapter {
             if (serverInfo.isOnline()) {
                 messageEmbed.setColor(Color.GREEN);
                 messageEmbed.setDescription(
-                        "Server Status : **Online**\n" +
+                                "Server Status : **Online**\n" +
                                 "Online Players : **" + serverInfo.getOnlinePlayers() + "/" + serverInfo.getMaxPlayers() + "**\n" +
                                 "TPS : **" + serverInfo.getTps() + "**\n" +
-                                "Version : **" + serverInfo.getMcVersion() + "**\n" +
-                                "  ");
+                                "Version : **" + serverInfo.getMcVersion() + "**");
             } else {
                 messageEmbed.setColor(Color.RED);
                 messageEmbed.setDescription(
-                        "Server Status : **Offline**\n" +
-                                "Version : **" + serverInfo.getMcVersion() + "**\n" +
-                                "  ");
+                                "Server Status : **Offline**\n" +
+                                "Last Known Version : **" + serverInfo.getMcVersion() + "**\n" +
+                                "Last Known Max Players: **" + serverInfo.getMaxPlayers() + "**");
             }
             messageEmbed.setFooter("Results may be cached for up to " + cache + " seconds. \nMade by EmerqldWither");
-            event.replyEmbeds(messageEmbed.build()).setEphemeral(false).queue();
+            event.replyEmbeds(messageEmbed.build()).setEphemeral(false).addActionRow(
+                    Button.link("https://github.com/EmeraldWither/McINFO_Standalone", "Link to Github")).queue();
             lastRanCommand = (System.currentTimeMillis() + (cache * 1000L));
+        }
+        if(event.getSubcommandName().equalsIgnoreCase("about")){
+            EmbedBuilder messageEmbed = new EmbedBuilder();
+            event.replyEmbeds(messageEmbed.build()).setEphemeral(false).queue();
         }
     }
 }

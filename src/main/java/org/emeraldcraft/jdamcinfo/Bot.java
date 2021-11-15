@@ -10,10 +10,6 @@ public class Bot {
     private static JDA jda;
     private static Database database;
 
-    public Bot(){
-    }
-
-
     /**
      * @return The JDA bot instance.
      */
@@ -40,7 +36,7 @@ public class Bot {
     }
 
     /**
-     * @param database Only for interal use.
+     * @param database Only for internal use.
      */
     public void setDatabase(Database database) {
         Bot.database = database;

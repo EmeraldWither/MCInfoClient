@@ -6,23 +6,20 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.emeraldcraft.jdamcinfo.DatabaseManagers.Database;
 import org.emeraldcraft.jdamcinfo.Listeners.onCommandReceive;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         try {
-            //Load file configuraiton
+            //Load file configuration
             File f = new File(System.getProperty("java.class.path"));
             File dir = f.getAbsoluteFile().getParentFile();
             String path = dir.toString();
@@ -62,84 +59,77 @@ public class Main {
                     break;
                 }
             }
-            if(!foundCommand){
+            if (!foundCommand) {
                 System.out.println("Had to upsert a command.");
                 Bot.getBot().upsertCommand("mcserver", "Minecraft Server command.")
                         .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
                         .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
-                        .queue();            }
+                        .queue();
+            }
             Bot Bot;
             Bot = new Bot();
             Bot.setJda(bot);
             Bot.setDatabase(database);
-            CompletableFuture.runAsync(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        database.testConnection();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        shutdown();
-                    }
+            CompletableFuture.runAsync(() -> {
+                try {
+                    database.testConnection();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    shutdown();
                 }
             });
-            CompletableFuture.runAsync(new Runnable() {
-                @Override
-                public void run() {
-                    ServerInfo serverInfo = database.getServerInfo();
-                    System.out.println("isOnline = " + serverInfo.isOnline());
-                    System.out.println("mcVersion = " + serverInfo.getMcVersion());
-                    System.out.println("motd = " + serverInfo.getMotd());
-                    System.out.println("onlinePlayers = " + serverInfo.getOnlinePlayers());
-                    System.out.println("maxPlayers = " + serverInfo.getMaxPlayers());
-                    System.out.println("tps = " + serverInfo.getTps());
-                }
+            CompletableFuture.runAsync(() -> {
+                ServerInfo serverInfo = database.getServerInfo();
+                System.out.println("Current database information: ");
+                System.out.println("IsOnline = " + serverInfo.isOnline());
+                System.out.println("Minecraft Server = " + serverInfo.getMcVersion());
+                System.out.println("Online Players = " + serverInfo.getOnlinePlayers());
+                System.out.println("Max Players = " + serverInfo.getMaxPlayers());
+                System.out.println("TPS = " + serverInfo.getTps());
+                checkCommand();
             });
-            checkCommand();
 
 
-        }
-        catch (Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
             shutdown();
         }
 
     }
 
-    public static void shutdown(){
+    public static void shutdown() {
         System.out.println("Shutting down now");
-        if(Bot.getBot() != null) {
+        if (Bot.getBot() != null) {
+            Bot.getBot().getPresence().setStatus(OnlineStatus.IDLE);
             Bot.getBot().shutdownNow();
         }
-        if(Bot.getDatabase() != null){
+        if (Bot.getDatabase() != null) {
             Bot.getDatabase().closeConnection();
         }
         System.exit(0);
     }
-    public static void checkCommand(){
-        try {
-            System.out.println("Input ur command");
-        InputStreamReader inputStream = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(inputStream);
-            if (br.readLine().equalsIgnoreCase("stop")) {
-                shutdown();
-                return;
-            }
-            if(br.readLine().equalsIgnoreCase("upsertcommand")){
-                System.out.println("Attempting to upsert the command. ");
-                Bot.getBot().upsertCommand("mcserver", "Minecraft Server command.")
-                        .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
-                        .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
-                        .queue();
-                System.out.println("Upsert the command. In the queue right now. ");
-                checkCommand();
-                return;
-            }
-            System.out.println("Unknown Command. Try again:");
-            checkCommand();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    public static void checkCommand() {
+        System.out.print("If you wish to stop the bot, type \"stop\" here. If you wish to attempt to upsert the /mcserver command, type  \"upsertcommand\" here.");
+        Scanner scanner = new Scanner(System.in);
+        String response = scanner.nextLine();
+        if (response.equalsIgnoreCase("stop")) {
+            shutdown();
+            return;
         }
+        if (response.equalsIgnoreCase("upsertcommand")) {
+            System.out.println("Attempting to upsert the command. ");
+            Bot.getBot().upsertCommand("mcserver", "Minecraft Server command.")
+                    .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
+                    .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
+                    .queue();
+            System.out.println("Queued the upsert command.");
+            checkCommand();
+            return;
+        }
+        System.out.println("Unknown Command. Try again:");
+        checkCommand();
     }
 }
 
