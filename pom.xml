@@ -6,7 +6,7 @@
 
     <groupId>org.emeraldcraft.jdamcinfo</groupId>
     <artifactId>McInfo-Standalone</artifactId>
-    <version>1.0 BETA</version>
+    <version>1.1</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
@@ -30,7 +30,7 @@
                                     <mainClass>org.emeraldcraft.jdamcinfo.Main</mainClass>
                                 </transformer>
                             </transformers>
-                            <finalName>${artifactId}</finalName>
+                            <finalName>${artifactId}-RUNME</finalName>
                         </configuration>
                     </execution>
                 </executions>

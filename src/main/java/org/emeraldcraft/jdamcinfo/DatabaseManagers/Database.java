@@ -1,20 +1,18 @@
 package org.emeraldcraft.jdamcinfo.DatabaseManagers;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import org.emeraldcraft.jdamcinfo.Main;
 import org.emeraldcraft.jdamcinfo.ServerInfo;
 
 import java.sql.*;
 
 public class Database {
-    private String url;
-    private Integer port;
-    private String username;
-    private String name;
-    private String password;
+    private final String url;
+    private final Integer port;
+    private final String username;
+    private final String name;
+    private final String password;
     private Connection connection;
-    private boolean isEnabled = false;
+
     public Database(String url, Integer port, String name , String username, String password){
         this.url = url;
         this.name = name;
@@ -24,21 +22,15 @@ public class Database {
     }
     public void testConnection() throws SQLException {
         try {
-            //Class.forName("com.mysql.cj.jdbc.Driver");
-
             this.openConnection();
             if(getConnection() != null && !getConnection().isClosed()){
-
                 System.out.println("Test database connection successful! You are good to go!");
-                isEnabled = true;
                 return;
             }
-            isEnabled = false;
             System.out.println("There was a problem while opening up the database connection. ");
             Main.shutdown();
         } catch (SQLException e) {
             e.printStackTrace();
-            isEnabled = false;
             System.out.println("There was a problem while opening up the database connection. ");
             Main.shutdown();
         }
@@ -87,7 +79,7 @@ public class Database {
                 openConnection();
             }
             Connection connection = getConnection();
-            String sqlcreateTable = "create table if not exists serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), motd varchar(69), tps integer(3), serverName varchar(1000));";
+            String sqlcreateTable = "create table if not exists serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), tps integer(3), serverName varchar(1000));";
             String sqlSelect = "SELECT * from serverinfo;";
 
             // Create table
