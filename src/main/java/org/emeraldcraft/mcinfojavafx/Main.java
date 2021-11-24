@@ -28,13 +28,23 @@ import java.util.concurrent.CompletableFuture;
 
 public class Main extends Application {
     private static Stage stage;
+    private static boolean isIncorrect = false;
     @Override
     public void start(Stage stage) throws IOException {
         Main.stage = stage;
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("BotInitializeScene.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 603, 400);
+        FXMLLoader fxmlLoader;
+        Scene scene;
+        if(isIncorrect){
+            fxmlLoader = new FXMLLoader(Main.class.getResource("DiscordStartupErrorScene.fxml"));
+            scene = new Scene(fxmlLoader.load(), 700, 400);
+        }
+        else {
+            fxmlLoader = new FXMLLoader(Main.class.getResource("BotInitializeScene.fxml"));
+            scene = new Scene(fxmlLoader.load(), 604, 400);
+        }
         stage.setTitle("Discord Bot");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.getIcons().add(new Image("loading.png"));
         stage.show();
     }
@@ -52,6 +62,7 @@ public class Main extends Application {
                 if (Bot.getConfig().getProperty("bot.token").equalsIgnoreCase("bottokenhere")) {
                     System.out.println("Please input the bot token!");
                     System.out.println("Error! Could not login! Shutting down in 10 seconds.");
+                    isIncorrect = true;
                     try {
                         Thread.sleep(10000);
                     } catch (InterruptedException ex) {
@@ -176,7 +187,7 @@ public class Main extends Application {
     }
 
     public static void checkCommand() {
-        System.out.print("If you wish to stop the bot, type \"stop\" here. If you wish to attempt to upsert the /mcserver command, type  \"upsertcommand\" here.");
+        System.out.println("If you wish to stop the bot, type \"stop\" here. If you wish to attempt to upsert the /mcserver command, type  \"upsertcommand\" here.");
         Scanner scanner = new Scanner(System.in);
         String response = scanner.nextLine();
         if (response.equalsIgnoreCase("stop")) {

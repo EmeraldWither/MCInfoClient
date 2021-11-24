@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17">
+   <children>
+      <Text layoutX="65.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There was an error starting up your bot!">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Text>
+      <Text fill="RED" layoutX="7.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please make sure that your .properties file is correct!">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

@@ -35,7 +35,6 @@ public class GUIController {
         usernameLabel.setText("Currently logged in as: " + Bot.getBot().getSelfUser().getAsTag());
         Bot.getDatabase().openConnection();
         if(Bot.getDatabase().getConnection() == null || Bot.getDatabase().getConnection().isClosed()){
-            System.out.println("Method returned;");
             return;
         }
         ServerInfo serverInfo;
@@ -50,7 +49,7 @@ public class GUIController {
         playerCountLabel.setText(serverInfo.getOnlinePlayers() + "/" + serverInfo.getMaxPlayers());
 
         LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochMilli(Bot.getDatabase().lastDatabaseConnection()), ZoneId.systemDefault());
-        String formattedDate = date.format(DateTimeFormatter.ofPattern("M/d/u K:mm:ss a"));
+        String formattedDate = date.format(DateTimeFormatter.ofPattern("M/dd/uu K:mm:ss a"));
         lastDatabaseConnectionLabel.setText(formattedDate);
 
         Bot.getStage().setTitle(serverInfo.getServerName() + "'s Discord Bot || Made by EmerqldWither");

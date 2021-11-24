@@ -105,7 +105,6 @@ public class Database {
                 tps = results.getInt("tps");
                 mcVersion = results.getString("mcVersion");
                 serverName = results.getString("serverName");
-                System.out.println("Servername" + serverName);
             }
 
         }
@@ -115,7 +114,6 @@ public class Database {
         }
         closeConnection();
         this.serverInfo = new ServerInfo(isOnline, onlinePlayers, maxPlayers, tps, mcVersion, serverName);
-        System.out.println(serverInfo);
         return new ServerInfo(isOnline, onlinePlayers, maxPlayers, tps, mcVersion, serverName);
     }
 
