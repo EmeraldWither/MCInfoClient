@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.emeraldcraft.mcinfojavafx.JavaFX.GUIController">
+   <children>
+      <Text layoutX="456.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Bot Status: " wrappingWidth="146.20361328125">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Label fx:id="usernameLabel" alignment="CENTER_RIGHT" layoutX="317.0" layoutY="370.0" prefHeight="30.0" prefWidth="282.0" text="Currently Logged in as:">
+         <font>
+            <Font name="HoloLens MDL2 Assets" size="13.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="469.0" layoutY="24.0" prefHeight="37.0" prefWidth="112.0" text="ONLINE" textFill="#2bff00">
+         <font>
+            <Font name="HoloLens MDL2 Assets" size="27.0" />
+         </font>
+      </Label>
+      <Text layoutX="22.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cached Server Information" wrappingWidth="196.20361328125">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <Label fx:id="serverOnlineStatusLabel" layoutX="129.0" layoutY="25.0" text="OFFLINE" textFill="RED">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Text layoutX="18.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Online Status:">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Text>
+      <Label fx:id="playerCountLabel" layoutX="81.0" layoutY="56.0" text="0/20">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Text layoutX="18.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Players:">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Text>
+      <Label fx:id="serverTPSLabel" layoutX="60.0" layoutY="87.0" text="20">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Text layoutX="18.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TPS:">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Text>
+      <Label fx:id="serverVersionLabel" layoutX="136.0" layoutY="120.0" text="N\A">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Text layoutX="18.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server Version:">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Text>
+      <Line endX="196.20361328125" layoutX="1.0" layoutY="24.0" startX="6.0" />
+      <Button fx:id="refreshButton" layoutX="20.0" layoutY="156.0" mnemonicParsing="false" onAction="#invalidateCaches" text="Refresh Information">
+         <tooltip>
+            <Tooltip text="This will request new data from your database." />
+         </tooltip></Button>
+      <Text layoutX="9.0" layoutY="390.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Database Query:" wrappingWidth="136.20361328125">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <Label fx:id="lastDatabaseConnectionLabel" layoutX="146.0" layoutY="378.0" prefHeight="17.0" prefWidth="171.0" text="N\A" />
+   </children>
+</AnchorPane>
