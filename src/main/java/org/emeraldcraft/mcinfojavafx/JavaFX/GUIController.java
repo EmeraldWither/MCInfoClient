@@ -33,10 +33,6 @@ public class GUIController {
 
     public void updateInformation() throws SQLException {
         usernameLabel.setText("Currently logged in as: " + Bot.getBot().getSelfUser().getAsTag());
-        Bot.getDatabase().openConnection();
-        if(Bot.getDatabase().getConnection() == null || Bot.getDatabase().getConnection().isClosed()){
-            return;
-        }
         ServerInfo serverInfo;
         if(Bot.getDatabase().getCachedServerInfo() == null){
            serverInfo = Bot.getDatabase().getServerInfo();

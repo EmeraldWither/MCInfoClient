@@ -105,22 +105,6 @@ public class Main extends Application {
                 Bot.setJda(bot);
                 Bot.setStage(stage);
                 Bot.setDatabase(database);
-                CompletableFuture.runAsync(() -> {
-                    try {
-                        database.testConnection();
-                        ServerInfo serverInfo = database.getServerInfo();
-                        System.out.println("Current database information: ");
-                        System.out.println("IsOnline = " + serverInfo.isOnline());
-                        System.out.println("Minecraft Server = " + serverInfo.getMcVersion());
-                        System.out.println("Online Players = " + serverInfo.getOnlinePlayers());
-                        System.out.println("Max Players = " + serverInfo.getMaxPlayers());
-                        System.out.println("TPS = " + serverInfo.getTps());
-                        checkCommand();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        shutdown();
-                    }
-                });
             } catch (Exception e) {
                 e.printStackTrace();
                 shutdown();
@@ -145,7 +129,6 @@ public class Main extends Application {
                             }
                             Platform.runLater(() -> {
                                 try {
-                                    Bot.getDatabase().openConnection();
                                     controller.updateInformation();
                                 } catch (SQLException e) {
                                     e.printStackTrace();

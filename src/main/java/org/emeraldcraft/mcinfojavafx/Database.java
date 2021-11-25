@@ -46,12 +46,7 @@ public class Database {
     public void openConnection(){
         try {
             String url = "jdbc:mysql://" + this.url + ":" + this.port + "/" + this.name;
-            // try catch to get any SQL errors (for example connections errors)
             connection = DriverManager.getConnection(url, username, password);
-
-            // with the method getConnection() from DriverManager, we're trying to set
-            // the connection's url, username, password to the variables we made earlier and
-            // trying to get a connection at the same time. JDBC allows us to do this.
         } catch (SQLException e) { // catching errors
             e.printStackTrace(); // prints out SQLException errors to the console (if any)
         }
@@ -84,7 +79,7 @@ public class Database {
 
         try {
             this.lastDatabaseConnection = System.currentTimeMillis();
-            if(getConnection() == null || getConnection().isClosed()){
+            if (getConnection() == null || getConnection().isClosed()) {
                 openConnection();
             }
             Connection connection = getConnection();
@@ -106,10 +101,11 @@ public class Database {
                 mcVersion = results.getString("mcVersion");
                 serverName = results.getString("serverName");
             }
-
+            closeConnection();
         }
         catch (SQLException e){
             System.out.println("A database error has occurred!");
+            closeConnection();
             e.printStackTrace();
         }
         closeConnection();
