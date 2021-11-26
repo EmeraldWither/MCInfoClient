@@ -1,6 +1,7 @@
 package org.emeraldcraft.mcinfojavafx;
 
 import java.sql.*;
+import java.util.UUID;
 
 public class Database {
     private final String url;
@@ -83,8 +84,8 @@ public class Database {
                 openConnection();
             }
             Connection connection = getConnection();
-            String sqlcreateTable = "create table if not exists serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), tps integer(3), serverName varchar(1000));";
-            String sqlSelect = "SELECT * from serverinfo;";
+            String sqlcreateTable = "CREATE TABLE IF NOT EXISTS serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), tps integer(3), serverName varchar(1000));";
+            String sqlSelect = "SELECT * FROM serverinfo;";
 
             // Create table
             PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
@@ -111,6 +112,33 @@ public class Database {
         closeConnection();
         this.serverInfo = new ServerInfo(isOnline, onlinePlayers, maxPlayers, tps, mcVersion, serverName);
         return new ServerInfo(isOnline, onlinePlayers, maxPlayers, tps, mcVersion, serverName);
+    }
+
+    public void queueCommand(String command){
+        try {
+            this.lastDatabaseConnection = System.currentTimeMillis();
+            if (getConnection() == null || getConnection().isClosed()) {
+                openConnection();
+            }
+            Connection connection = getConnection();
+            String sqlcreateTable = "CREATE TABLE IF NOT EXISTS commands(commandID varchar(200), command varchar(1000));";
+            String insertData = "INSERT INTO commands VALUE (?, ?);";
+
+            // Create table
+            PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
+            stmt.executeUpdate();
+
+            PreparedStatement insertDataStatement = connection.prepareStatement(insertData);
+            insertDataStatement.setString(1, UUID.randomUUID().toString());
+            insertDataStatement.setString(2, command);
+            insertDataStatement.executeUpdate();
+            closeConnection();
+        }
+        catch (SQLException e){
+            System.out.println("A database error has occurred!");
+            closeConnection();
+            e.printStackTrace();
+        }
     }
 
 }

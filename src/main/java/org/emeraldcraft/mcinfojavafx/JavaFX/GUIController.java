@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.emeraldcraft.mcinfojavafx.Bot;
 import org.emeraldcraft.mcinfojavafx.ServerInfo;
@@ -13,6 +14,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 
 public class GUIController {
@@ -30,6 +33,14 @@ public class GUIController {
     private Button refreshButton;
     @FXML
     private Label lastDatabaseConnectionLabel;
+    @FXML
+    private TextField executeCommandTextField;
+    @FXML
+    private Button executeCommandButton;
+    @FXML
+    private Label executeCommandResultLabel;
+
+    private Timer currentTimer;
 
     public void updateInformation() throws SQLException {
         usernameLabel.setText("Currently logged in as: " + Bot.getBot().getSelfUser().getAsTag());
@@ -53,11 +64,73 @@ public class GUIController {
         if(serverInfo.isOnline()){
             serverOnlineStatusLabel.setText("ONLINE");
             serverOnlineStatusLabel.setTextFill(Color.GREEN);
+            executeCommandButton.setDisable(false);
+            executeCommandTextField.setDisable(false);
             return;
         }
         serverOnlineStatusLabel.setText("OFFLINE");
         serverOnlineStatusLabel.setTextFill(Color.RED);
+        executeCommandButton.setDisable(true);
+        executeCommandTextField.setDisable(true);
     }
+    public void executeCommand() throws SQLException {
+        if(executeCommandTextField.getText().isEmpty()){
+            if(currentTimer != null) currentTimer.cancel();
+            executeCommandResultLabel.setText("Please enter in a command.");
+            executeCommandResultLabel.setTextFill(Color.RED);
+            currentTimer = new Timer();
+            currentTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(() -> {
+                        executeCommandResultLabel.setText("");
+                    });
+                }
+            }, 10 * 1000);
+            return;
+        }
+        executeCommandButton.setDisable(false);
+        ServerInfo serverInfo = Bot.getDatabase().getServerInfo();
+        if(!serverInfo.isOnline()){
+            if(currentTimer != null) currentTimer.cancel();
+            executeCommandTextField.setDisable(false);
+
+            executeCommandResultLabel.setText("The server is not online!");
+            executeCommandResultLabel.setTextFill(Color.RED);
+            updateInformation();
+
+            currentTimer = new Timer();
+            currentTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(() -> {
+                        executeCommandResultLabel.setText("");
+                    });
+                }
+            }, (10) * 1000);
+            return;
+        }
+        CompletableFuture.runAsync(() -> {
+            Bot.getDatabase().queueCommand(executeCommandTextField.getText());
+            Platform.runLater(() -> {
+                if(currentTimer != null) currentTimer.cancel();
+                executeCommandButton.setDisable(false);
+                executeCommandTextField.setText("");
+                executeCommandResultLabel.setText("Queued the command to be executed!");
+                executeCommandResultLabel.setTextFill(Color.GREEN);
+                currentTimer = new Timer();
+                currentTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(() -> {
+                            executeCommandResultLabel.setText("");
+                        });
+                    }
+                }, (10) * 1000);
+            });
+        });
+    }
+
     public void invalidateCaches(){
         Platform.runLater(() -> {
             refreshButton.setDisable(true);

@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.emeraldcraft.mcinfojavafx.JavaFX.GUIController;
 import org.emeraldcraft.mcinfojavafx.Listeners.onCommandReceive;
 
+import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -83,7 +84,15 @@ public class Main extends Application {
                 JDABuilder builder = JDABuilder.createDefault(Bot.getConfig().getProperty("bot.token"));
                 builder.setStatus(OnlineStatus.ONLINE);
                 builder.setActivity(Activity.listening("/mcserver"));
-                JDA bot = builder.build();
+                JDA bot = null;
+                try{
+                    bot = builder.build();
+                }
+                catch (LoginException e){
+                    isIncorrect = true;
+                    shutdown();
+                }
+                assert bot != null;
                 bot.awaitReady();
                 bot.addEventListener(new onCommandReceive());
                 boolean foundCommand = false;
@@ -118,6 +127,7 @@ public class Main extends Application {
                     stage.getIcons().clear();
                     stage.getIcons().add(new Image("icon.png"));
                     Bot.getStage().setScene(scene);
+
                     Timer timer = new Timer();
                     GUIController controller = fxmlLoader.getController();
                     timer.schedule(new TimerTask() {
@@ -142,6 +152,7 @@ public class Main extends Application {
                         alert.setTitle("Are you sure you want to close?");
                         alert.setHeaderText("Are you sure you want to shutdown the bot?");
                         alert.setContentText("Doing so will result in the bot going offline.");
+                        //noinspection OptionalGetWithoutIsPresent
                         if(alert.showAndWait().get() == ButtonType.OK){
                             shutdown();
                         }
@@ -150,6 +161,7 @@ public class Main extends Application {
                     e.printStackTrace();
                 }
             });
+            CompletableFuture.runAsync(Main::checkCommand);
         });
         launch(args);
 
