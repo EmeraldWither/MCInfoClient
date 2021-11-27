@@ -1,9 +1,11 @@
 package org.emeraldcraft.mcinfojavafx.JavaFX;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.emeraldcraft.mcinfojavafx.Bot;
@@ -14,11 +16,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 
-public class GUIController {
+public class GUIController  {
     @FXML
     private Label serverTPSLabel;
     @FXML
@@ -39,10 +42,13 @@ public class GUIController {
     private Button executeCommandButton;
     @FXML
     private Label executeCommandResultLabel;
+    @FXML
+    private TextArea consoleTextArea;
 
     private Timer currentTimer;
 
     public void updateInformation() throws SQLException {
+        consoleTextArea.setEditable(false);
         usernameLabel.setText("Currently logged in as: " + Bot.getBot().getSelfUser().getAsTag());
         ServerInfo serverInfo;
         if(Bot.getDatabase().getCachedServerInfo() == null){
@@ -51,6 +57,7 @@ public class GUIController {
         else {
             serverInfo = Bot.getDatabase().getCachedServerInfo();
         }
+
         serverTPSLabel.setText("" + serverInfo.getTps());
         serverVersionLabel.setText("" + serverInfo.getMcVersion());
         playerCountLabel.setText(serverInfo.getOnlinePlayers() + "/" + serverInfo.getMaxPlayers());
@@ -82,9 +89,7 @@ public class GUIController {
             currentTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(() -> {
-                        executeCommandResultLabel.setText("");
-                    });
+                    Platform.runLater(() -> executeCommandResultLabel.setText(""));
                 }
             }, 10 * 1000);
             return;
@@ -103,9 +108,7 @@ public class GUIController {
             currentTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(() -> {
-                        executeCommandResultLabel.setText("");
-                    });
+                    Platform.runLater(() -> executeCommandResultLabel.setText(""));
                 }
             }, (10) * 1000);
             return;
@@ -122,9 +125,7 @@ public class GUIController {
                 currentTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        Platform.runLater(() -> {
-                            executeCommandResultLabel.setText("");
-                        });
+                        Platform.runLater(() -> executeCommandResultLabel.setText(""));
                     }
                 }, (10) * 1000);
             });
@@ -147,5 +148,15 @@ public class GUIController {
                 });
             });
         });
+    }
+    public void updateConsoleMessages(){
+        consoleTextArea.textProperty().addListener((ChangeListener<Object>) (observable, oldValue, newValue) -> {
+            consoleTextArea.setScrollTop(Double.MAX_VALUE); //this will scroll to the bottom
+
+        });
+        final ArrayList<String> consoleMessages = Bot.getDatabase().getConsoleMessages();
+        for(String consoleMsg : consoleMessages){
+            consoleTextArea.appendText(consoleMsg + "\n");
+        }
     }
 }

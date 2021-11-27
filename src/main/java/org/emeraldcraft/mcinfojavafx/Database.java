@@ -1,6 +1,7 @@
 package org.emeraldcraft.mcinfojavafx;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Database {
@@ -29,21 +30,7 @@ public class Database {
     public Long lastDatabaseConnection(){
         return this.lastDatabaseConnection;
     }
-    public void testConnection() throws SQLException {
-        try {
-            this.openConnection();
-            if(getConnection() != null && !getConnection().isClosed()){
-                System.out.println("Test database connection successful! You are good to go!");
-                return;
-            }
-            System.out.println("There was a problem while opening up the database connection. ");
-            Main.shutdown();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("There was a problem while opening up the database connection. ");
-            Main.shutdown();
-        }
-    }
+
     public void openConnection(){
         try {
             String url = "jdbc:mysql://" + this.url + ":" + this.port + "/" + this.name;
@@ -139,6 +126,39 @@ public class Database {
             closeConnection();
             e.printStackTrace();
         }
+    }
+    public ArrayList<String> getConsoleMessages(){
+        final ArrayList<String> consoleMessages = new ArrayList<>();
+        try {
+            this.lastDatabaseConnection = System.currentTimeMillis();
+            if (getConnection() == null || getConnection().isClosed()) {
+                openConnection();
+            }
+            Connection connection = getConnection();
+            String sqlcreateTable = "CREATE TABLE IF NOT EXISTS logs(logID integer(100), logMessage varchar(10000));";
+            String getLogs = "SELECT * FROM logs ORDER BY logID;";
+            String deleteLog = "DELETE FROM logs WHERE logID = ?";
+
+            // Create table
+            PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
+            stmt.executeUpdate();
+
+            PreparedStatement getCommandStatement = connection.prepareStatement(getLogs);
+            ResultSet results = getCommandStatement.executeQuery();
+            while(results.next()){
+                consoleMessages.add(results.getString(2));
+
+                PreparedStatement deleteLogs = connection.prepareStatement(deleteLog);
+                deleteLogs.setInt(1, results.getInt(1));
+                deleteLogs.executeUpdate();
+            }
+        }
+        catch (SQLException e){
+            System.out.println("A database error has occurred!");
+            closeConnection();
+            e.printStackTrace();
+        }
+        return consoleMessages;
     }
 
 }
