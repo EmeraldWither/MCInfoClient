@@ -7,4 +7,6 @@ updates:
       # Check for updates once daily
       schedule:
           interval: "daily"
-      target-branch: "master"
+      target-branch: 
+          - "master"
+          - "javafx"
