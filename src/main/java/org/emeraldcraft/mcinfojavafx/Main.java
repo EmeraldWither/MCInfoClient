@@ -58,6 +58,11 @@ public class Main extends Application {
                 File dir = f.getAbsoluteFile().getParentFile();
                 String path = dir.toString();
                 Bot.createConfig(path);
+                if(!f.exists()){
+                    System.out.println("ERROR! Could not create the config file.");
+                    shutdown();
+                    return;
+                }
                 System.out.println("Created config. Now starting up the bot");
 
                 if (Bot.getConfig().getProperty("bot.token").equalsIgnoreCase("bottokenhere")) {
@@ -82,8 +87,9 @@ public class Main extends Application {
                 int port = Integer.parseInt(stringPort);
                 Database database = new Database(url, port, dbname, username, password);
                 JDABuilder builder = JDABuilder.createDefault(Bot.getConfig().getProperty("bot.token"));
-                builder.setStatus(OnlineStatus.ONLINE);
-                builder.setActivity(Activity.listening("/mcserver"));
+                builder
+                        .setStatus(OnlineStatus.ONLINE)
+                        .setActivity(Activity.listening("/mcserver"));
                 JDA bot = null;
                 try{
                     bot = builder.build();
@@ -103,11 +109,12 @@ public class Main extends Application {
                     }
                 }
                 if (!foundCommand) {
-                    System.out.println("Had to upsert a command.");
+                    System.out.println("Unable to find command. I will not attempt to to re upsert the command.");
                     Bot.getBot().upsertCommand("mcserver", "Minecraft Server command.")
                             .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
                             .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
                             .queue();
+                    System.out.println("I queued the upsert command. If you are finding that your commands don't show up, kick the bot from the guild and re-invite them again.");
                 }
                 Bot Bot;
                 Bot = new Bot();
@@ -134,7 +141,7 @@ public class Main extends Application {
                         @Override
                         public void run() {
                             if(controller == null){
-                                System.out.println("THE CONTROLLER IS NULL!");
+                                System.out.println("I was unable to find the controller for this JavaFX scene.");
                                 return;
                             }
                             Platform.runLater(() -> {
@@ -188,20 +195,22 @@ public class Main extends Application {
     }
 
     public static void checkCommand() {
-        System.out.println("If you wish to stop the bot, type \"stop\" here. If you wish to attempt to upsert the /mcserver command, type  \"upsertcommand\" here.");
-        Scanner scanner = new Scanner(System.in);
-        String response = scanner.nextLine();
+        System.out.println("""
+                If you wish to stop the bot, type "stop" here. If you wish to attempt to upsert the /mcserver command, type  "upsertcommand" here.
+                """);
+        Scanner in = new Scanner(System.in);
+        String response = in.nextLine();
         if (response.equalsIgnoreCase("stop")) {
             shutdown();
             return;
         }
-        if (response.equalsIgnoreCase("upsertcommand")) {
+        else if (response.equalsIgnoreCase("upsertcommand")) {
             System.out.println("Attempting to upsert the command. ");
             Bot.getBot().upsertCommand("mcserver", "Minecraft Server command.")
                     .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
                     .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
                     .queue();
-            System.out.println("Queued the upsert command.");
+            System.out.println("I queued the upsert command. If you are finding that your commands don't show up, kick the bot from the guild and re-invite them again.");
             checkCommand();
             return;
         }

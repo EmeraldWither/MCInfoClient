@@ -14,7 +14,11 @@ public class Database {
     private ServerInfo serverInfo;
     private Long lastDatabaseConnection;
 
-    public Database(String url, Integer port, String name , String username, String password){
+    public Database(String url,
+                    Integer port,
+                    String name ,
+                    String username,
+                    String password){
         this.url = url;
         this.name = name;
         this.port = port;
@@ -30,7 +34,6 @@ public class Database {
     public Long lastDatabaseConnection(){
         return this.lastDatabaseConnection;
     }
-
     public void openConnection(){
         try {
             String url = "jdbc:mysql://" + this.url + ":" + this.port + "/" + this.name;
@@ -49,8 +52,6 @@ public class Database {
             e.printStackTrace();
         }
     }
-
-    //Getter and Setters
     public Connection getConnection(){
         return this.connection;
     }
@@ -66,11 +67,11 @@ public class Database {
         //Create our vars to return
 
         try {
-            this.lastDatabaseConnection = System.currentTimeMillis();
             if (getConnection() == null || getConnection().isClosed()) {
                 openConnection();
             }
             Connection connection = getConnection();
+            this.lastDatabaseConnection = System.currentTimeMillis();
             String sqlcreateTable = "CREATE TABLE IF NOT EXISTS serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), tps integer(3), serverName varchar(1000));";
             String sqlSelect = "SELECT * FROM serverinfo;";
 
@@ -103,11 +104,11 @@ public class Database {
 
     public void queueCommand(String command){
         try {
-            this.lastDatabaseConnection = System.currentTimeMillis();
             if (getConnection() == null || getConnection().isClosed()) {
                 openConnection();
             }
             Connection connection = getConnection();
+            this.lastDatabaseConnection = System.currentTimeMillis();
             String sqlcreateTable = "CREATE TABLE IF NOT EXISTS commands(commandID varchar(200), command varchar(1000));";
             String insertData = "INSERT INTO commands VALUE (?, ?);";
 
@@ -130,11 +131,11 @@ public class Database {
     public ArrayList<String> getConsoleMessages(){
         final ArrayList<String> consoleMessages = new ArrayList<>();
         try {
-            this.lastDatabaseConnection = System.currentTimeMillis();
             if (getConnection() == null || getConnection().isClosed()) {
                 openConnection();
             }
             Connection connection = getConnection();
+            this.lastDatabaseConnection = System.currentTimeMillis();
             String sqlcreateTable = "CREATE TABLE IF NOT EXISTS logs(logID integer(100), logMessage varchar(10000));";
             String getLogs = "SELECT * FROM logs ORDER BY logID;";
             String deleteLog = "DELETE FROM logs WHERE logID = ?";

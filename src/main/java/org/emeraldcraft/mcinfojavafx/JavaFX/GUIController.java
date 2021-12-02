@@ -150,10 +150,7 @@ public class GUIController  {
         });
     }
     public void updateConsoleMessages(){
-        consoleTextArea.textProperty().addListener((ChangeListener<Object>) (observable, oldValue, newValue) -> {
-            consoleTextArea.setScrollTop(Double.MAX_VALUE); //this will scroll to the bottom
-
-        });
+        consoleTextArea.textProperty().addListener((ChangeListener<Object>) (observable, oldValue, newValue) -> consoleTextArea.setScrollTop(Double.MAX_VALUE));
         final ArrayList<String> consoleMessages = Bot.getDatabase().getConsoleMessages();
         for(String consoleMsg : consoleMessages){
             consoleTextArea.appendText(consoleMsg + "\n");
