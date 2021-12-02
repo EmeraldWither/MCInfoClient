@@ -27,5 +27,5 @@ jobs:
       - name : Upload plugin
         uses: actions/upload-artifact@v2
         with:
-          name: Plugin
+          name: Program
           path: staging
