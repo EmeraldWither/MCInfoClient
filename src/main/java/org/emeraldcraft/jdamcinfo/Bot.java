@@ -2,6 +2,7 @@ package org.emeraldcraft.jdamcinfo;
 
 import net.dv8tion.jda.api.JDA;
 import org.emeraldcraft.jdamcinfo.DatabaseManagers.Database;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Properties;
 
@@ -31,14 +32,18 @@ public class Bot {
     /**
      * @param jda Only used for internal use
      */
-    public void setJda(JDA jda) {
-        Bot.jda = jda;
+    public void setJda(@NotNull JDA jda) {
+        if(Bot.jda == null){
+            Bot.jda = jda;
+        }
     }
 
     /**
      * @param database Only for internal use.
      */
-    public void setDatabase(Database database) {
-        Bot.database = database;
+    public void setDatabase(@NotNull Database database) {
+        if(Bot.database == null){
+            Bot.database = database;
+        }
     }
 }
