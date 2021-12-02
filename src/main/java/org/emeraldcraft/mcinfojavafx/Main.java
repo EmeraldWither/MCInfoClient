@@ -196,7 +196,7 @@ public class Main extends Application {
 
     public static void checkCommand() {
         System.out.println("""
-                If you wish to stop the bot, type "stop" here. If you wish to attempt to upsert the /mcserver command, type  "upsertcommand" here.
+                If you wish to stop the bot, type "stop" here. If you wish to attempt to upsert the /mcserver command, type  "upsertcommand" here:
                 """);
         Scanner in = new Scanner(System.in);
         String response = in.nextLine();
