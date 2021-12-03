@@ -6,7 +6,7 @@
 
     <groupId>org.emeraldcraft.jdamcinfo.javafx</groupId>
     <artifactId>McINFOJavaFX</artifactId>
-    <version>1.1</version>
+    <version>1.1-STABLE</version>
     <name>McINFOJavaFX</name>
 
     <properties>
