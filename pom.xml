@@ -12,6 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.8.1</junit.version>
+        <outputDirectory>target</outputDirectory>
     </properties>
 
     <dependencies>
@@ -128,7 +129,9 @@
                                     <mainClass>org.emeraldcraft.mcinfojavafx.FullMain</mainClass>
                                 </transformer>
                             </transformers>
-                            <finalName>${artifactId}-${version}-RUNME</finalName>
+<!--                            <finalName>${artifactId}-${version}-RUNME</finalName>-->
+                            <outputFile>${outputDirectory}/${artifactId}-${version}-runme.jar</outputFile>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
                         </configuration>
                     </execution>
                 </executions>

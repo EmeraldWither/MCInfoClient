@@ -165,6 +165,9 @@ public class Main extends Application {
                         alert.setTitle("Are you sure you want to close?");
                         alert.setHeaderText("Are you sure you want to shutdown the bot?");
                         alert.setContentText("Doing so will result in the bot going offline.");
+                        Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+                        window.getIcons().clear();
+                        window.getIcons().add(new Image("close.png"));
                         //noinspection OptionalGetWithoutIsPresent
                         if(alert.showAndWait().get() == ButtonType.OK){
                             shutdown();

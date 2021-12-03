@@ -14,6 +14,7 @@ public class Bot {
     private static JDA jda;
     private static Database database;
     private static Stage stage;
+    public static final String PROGRAM_VERSION = "1.1-STABLE";
 
     /**
      * @return The JDA bot instance.

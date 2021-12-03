@@ -44,10 +44,13 @@ public class GUIController  {
     private Label executeCommandResultLabel;
     @FXML
     private TextArea consoleTextArea;
+    @FXML
+    private Label versionLabel;
 
     private Timer currentTimer;
 
     public void updateInformation() throws SQLException {
+        versionLabel.setText("v" + Bot.PROGRAM_VERSION);
         consoleTextArea.setEditable(false);
         usernameLabel.setText("Currently logged in as: " + Bot.getBot().getSelfUser().getAsTag());
         ServerInfo serverInfo;
