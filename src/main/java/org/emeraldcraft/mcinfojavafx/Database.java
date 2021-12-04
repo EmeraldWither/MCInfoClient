@@ -90,14 +90,12 @@ public class Database {
                 mcVersion = results.getString("mcVersion");
                 serverName = results.getString("serverName");
             }
-            closeConnection();
         }
         catch (SQLException e){
             System.out.println("A database error has occurred!");
             closeConnection();
             e.printStackTrace();
         }
-        closeConnection();
         this.serverInfo = new ServerInfo(isOnline, onlinePlayers, maxPlayers, tps, mcVersion, serverName);
         return new ServerInfo(isOnline, onlinePlayers, maxPlayers, tps, mcVersion, serverName);
     }
@@ -120,7 +118,6 @@ public class Database {
             insertDataStatement.setString(1, UUID.randomUUID().toString());
             insertDataStatement.setString(2, command);
             insertDataStatement.executeUpdate();
-            closeConnection();
         }
         catch (SQLException e){
             System.out.println("A database error has occurred!");
