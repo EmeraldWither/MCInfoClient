@@ -30,7 +30,7 @@
                                     <mainClass>org.emeraldcraft.jdamcinfo.Main</mainClass>
                                 </transformer>
                             </transformers>
-                            <finalName>${artifactId}-${version}-RUNME</finalName>
+                            <finalName>${artifactId}-${version}-runme</finalName>
                         </configuration>
                     </execution>
                 </executions>
