@@ -10,6 +10,8 @@
     <name>McINFOJavaFX</name>
 
     <properties>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.8.1</junit.version>
         <outputDirectory>target</outputDirectory>
@@ -129,20 +131,11 @@
                                     <mainClass>org.emeraldcraft.mcinfojavafx.FullMain</mainClass>
                                 </transformer>
                             </transformers>
-<!--                            <finalName>${artifactId}-${version}-RUNME</finalName>-->
                             <outputFile>${outputDirectory}/${artifactId}-${version}-runme.jar</outputFile>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>16</source>
-                    <target>16</target>
-                </configuration>
             </plugin>
         </plugins>
     </build>
