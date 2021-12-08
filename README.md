@@ -12,3 +12,5 @@ Features:
 - Show messages on the minecraft server on discord 
 - Send alerts when players leave or quit the server
 - Send alerts when a server starts up and shuts down
+
+**REQUIRES JAVA 16 OR ABOVE**
