@@ -69,7 +69,7 @@ public class GUIController  {
         String formattedDate = date.format(DateTimeFormatter.ofPattern("M/dd/uu K:mm:ss a"));
         lastDatabaseConnectionLabel.setText(formattedDate);
 
-        Bot.getStage().setTitle(serverInfo.getServerName() + "'s Discord Bot || Made by EmerqldWither");
+        Bot.getStage().setTitle(serverInfo.getServerName() + "'s Discord Bot || Made by " + Bot.AUTHOR);
 
         if(serverInfo.isOnline()){
             serverOnlineStatusLabel.setText("ONLINE");
@@ -153,6 +153,11 @@ public class GUIController  {
         });
     }
     public void updateConsoleMessages(){
+        if(Boolean.parseBoolean(Bot.getConfig().getProperty("console.messages.optimize"))){
+            if(!Bot.getDatabase().getCachedServerInfo().isOnline()) {
+                return;
+            }
+        }
         consoleTextArea.textProperty().addListener((ChangeListener<Object>) (observable, oldValue, newValue) -> consoleTextArea.setScrollTop(Double.MAX_VALUE));
         final ArrayList<String> consoleMessages = Bot.getDatabase().getConsoleMessages();
         for(String consoleMsg : consoleMessages){

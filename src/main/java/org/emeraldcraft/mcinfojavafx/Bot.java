@@ -14,7 +14,8 @@ public class Bot {
     private static JDA jda;
     private static Database database;
     private static Stage stage;
-    public static final String PROGRAM_VERSION = "1.1.1-STABLE";
+    public static final String PROGRAM_VERSION = "1.1.2-STABLE";
+    public static final String AUTHOR = "EmerqldWither";
 
     /**
      * @return The JDA bot instance.
@@ -61,18 +62,41 @@ public class Bot {
     }
     public static void createConfig(String path){
         File file = new File(path + "/config.properties");
+        SortedProperties sortedProperties  = new SortedProperties();
+
+        // set the properties value
+        sortedProperties.setProperty("bot.token", "bottokenhere");
+        sortedProperties.setProperty("db.user", "dbuser");
+        sortedProperties.setProperty("db.password", "dbpassword");
+        sortedProperties.setProperty("db.url", "database.example.com");
+        sortedProperties.setProperty("db.name", "jdadb");
+        sortedProperties.setProperty("db.port", "3306");
+        sortedProperties.setProperty("cache.length", "5");
+        sortedProperties.setProperty("console.messages", "false");
+        sortedProperties.setProperty("console.messages.optimize", "false");
+        String comments;
+        comments =
+                """
+                README:
+                Please note that enabling "console.messages.optimize", will only request when we know that the server is online.
+                It does this by using the cached data (you can do this by clicking the refresh button or a user querying the information)
+                Keeping this feature disabled will make the program query the database every second.
+                
+                You can use console.message to disable or enable requesting console messages. (Please use "true" or "false")
+                --------------------------------------------------------------------------------------------------------------------------
+                """;
+
         if(file.exists()){
             try (InputStream input = new FileInputStream(path + "/config.properties")) {
-
                 Properties prop = new Properties();
-
-                // load a properties file
                 prop.load(input);
 
-                // get the property value and print it out
-                if(!prop.containsKey("cache.length")){
-                    prop.setProperty("cache.length", "5");
+                for(String key : sortedProperties.stringPropertyNames()) {
+                    if (prop.getProperty(key) != null && !(prop.getProperty(key).isBlank())) continue;
+                    prop.setProperty(key, sortedProperties.getProperty(key));
                 }
+
+                prop.store(new FileOutputStream(path + "/config.properties"), comments);
                 config = prop;
 
             } catch (IOException ex) {
@@ -81,22 +105,11 @@ public class Bot {
             return;
         }
         try (OutputStream output = new FileOutputStream(path + "/config.properties")) {
-            SortedProperties prop = new SortedProperties();
-
-            // set the properties value
-            prop.setProperty("bot.token", "bottokenhere");
-            prop.setProperty("db.user", "dbuser");
-            prop.setProperty("db.password", "dbpassword");
-            prop.setProperty("db.url", "database.example.com");
-            prop.setProperty("db.name", "jdadb");
-            prop.setProperty("db.port", "3306");
-            prop.setProperty("cache.length", "5");
-
             // save properties to project root folder
-            prop.store(output, null);
+            sortedProperties.store(output, comments);
 
-            System.out.println("Properties File: " + prop);
-            config = prop;
+            System.out.println("Properties File: " + sortedProperties);
+            config = sortedProperties;
 
         } catch (IOException io) {
             io.printStackTrace();
@@ -106,7 +119,7 @@ public class Bot {
     private static class SortedProperties extends Properties {
         public Enumeration keys() {
             Enumeration keysEnum = super.keys();
-            Vector<String> keyList = new Vector<String>();
+            Vector<String> keyList = new Vector<>();
             while (keysEnum.hasMoreElements()) {
                 keyList.add((String) keysEnum.nextElement());
             }

@@ -38,7 +38,7 @@ public class onCommandReceive extends ListenerAdapter {
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setAuthor(serverInfo.getServerName());
             embedBuilder.setTitle(":no_entry_sign:  Sorry, but the server is currently offline! :no_entry_sign: ");
-            embedBuilder.setFooter("Results may be cached for up to " + cache + " seconds. \nMade by EmerqldWither");
+            embedBuilder.setFooter("Results may be cached for up to " + cache + " seconds. \nMade by Bot.AUTHOR");
             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
             lastRanCommand = (System.currentTimeMillis() + (cache * 1000L));
 
@@ -71,7 +71,7 @@ public class onCommandReceive extends ListenerAdapter {
                                 "Last Known Version : **" + serverInfo.getMcVersion() + "**\n" +
                                 "Last Known Max Players: **" + serverInfo.getMaxPlayers() + "**");
             }
-            messageEmbed.setFooter("Results may be cached for up to " + cache + " seconds. \nMade by EmerqldWither");
+            messageEmbed.setFooter("Results may be cached for up to " + cache + " seconds. \nMade by Bot.AUTHOR");
             event.replyEmbeds(messageEmbed.build()).setEphemeral(false).addActionRow(
                     Button.link("https://github.com/EmeraldWither/McINFO_Standalone", "Link to Github")).queue();
             lastRanCommand = (System.currentTimeMillis() + (cache * 1000L));

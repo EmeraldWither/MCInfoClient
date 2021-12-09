@@ -32,9 +32,11 @@ public class Main extends Application {
     private static boolean isIncorrect = false;
     @Override
     public void start(Stage stage) throws IOException {
+        //Default stage from JavaFX
         Main.stage = stage;
         FXMLLoader fxmlLoader;
         Scene scene;
+        //Launch is called at the end of the main method. If something is wrong, we have to say that there was an error
         if(isIncorrect){
             fxmlLoader = new FXMLLoader(Main.class.getResource("DiscordStartupErrorScene.fxml"));
             scene = new Scene(fxmlLoader.load(), 700, 400);
@@ -51,6 +53,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        //Run everything async
         CompletableFuture.runAsync(() ->{
             try {
                 //Load file configuration
@@ -64,7 +67,7 @@ public class Main extends Application {
                     return;
                 }
                 System.out.println("Created config. Now starting up the bot");
-
+                //Check if bot token is inputted
                 if (Bot.getConfig().getProperty("bot.token").equalsIgnoreCase("bottokenhere")) {
                     System.out.println("Please input the bot token!");
                     System.out.println("Error! Could not login! Shutting down in 10 seconds.");
@@ -75,15 +78,16 @@ public class Main extends Application {
                         ex.printStackTrace();
                     }
                     System.out.println("Shutting down now. ");
-                    System.exit(0);
-                    return;
+                    shutdown();
                 }
+                //Get Database information
                 String url = Bot.getConfig().getProperty("db.url");
                 String stringPort = Bot.getConfig().getProperty("db.port");
                 String dbname = Bot.getConfig().getProperty("db.name");
                 String username = Bot.getConfig().getProperty("db.user");
                 String password = Bot.getConfig().getProperty("db.password");
 
+                //Create our JDA bot
                 int port = Integer.parseInt(stringPort);
                 Database database = new Database(url, port, dbname, username, password);
                 JDABuilder builder = JDABuilder.createDefault(Bot.getConfig().getProperty("bot.token"));
@@ -94,6 +98,7 @@ public class Main extends Application {
                 try{
                     bot = builder.build();
                 }
+                //Check if the token is valid
                 catch (LoginException e){
                     isIncorrect = true;
                     shutdown();
@@ -102,6 +107,7 @@ public class Main extends Application {
                 bot.awaitReady();
                 bot.addEventListener(new onCommandReceive());
                 boolean foundCommand = false;
+                //Check if the bot has created its command.
                 for (Command command : bot.retrieveCommands().complete()) {
                     if (command.getName().equalsIgnoreCase("mcserver")) {
                         foundCommand = true;
@@ -111,6 +117,7 @@ public class Main extends Application {
                 if (!foundCommand) {
                     System.out.println("Unable to find command. I will not attempt to to re upsert the command.");
                     Bot.getBot().upsertCommand("mcserver", "Minecraft Server command.")
+                            //Upsert the command
                             .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
                             .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
                             .queue();
@@ -153,12 +160,14 @@ public class Main extends Application {
                             });
                         }
                     }, 0, 5000);
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            Platform.runLater(controller::updateConsoleMessages);
-                        }
-                    }, 1000L, 1000L);
+                    if(Boolean.parseBoolean(Bot.getConfig().getProperty("console.messages"))) {
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                Platform.runLater(controller::updateConsoleMessages);
+                            }
+                        }, 1000L, 1000L);
+                    }
                     stage.setOnCloseRequest(windowEvent -> {
                         windowEvent.consume();
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -198,9 +207,9 @@ public class Main extends Application {
     }
 
     public static void checkCommand() {
-        System.out.println("""
-                If you wish to stop the bot, type "stop" here. If you wish to attempt to upsert the /mcserver command, type  "upsertcommand" here:
-                """);
+        System.out.print("""
+                If you wish to stop the bot, type "stop" here.
+                If you wish to attempt to upsert the /mcserver command on discord, type "upsertcommand" here.""");
         Scanner in = new Scanner(System.in);
         String response = in.nextLine();
         if (response.equalsIgnoreCase("stop")) {
@@ -213,7 +222,7 @@ public class Main extends Application {
                     .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
                     .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
                     .queue();
-            System.out.println("I queued the upsert command. If you are finding that your commands don't show up, kick the bot from the guild and re-invite them again.");
+            System.out.println("\nI queued the upsert command. If you are finding that your commands don't show up, kick the bot from the guild and re-invite them again.\n");
             checkCommand();
             return;
         }
