@@ -133,9 +133,9 @@ public class Database {
             }
             Connection connection = getConnection();
             this.lastDatabaseConnection = System.currentTimeMillis();
-            String sqlcreateTable = "CREATE TABLE IF NOT EXISTS logs(logID integer(100), logMessage varchar(10000));";
-            String getLogs = "SELECT * FROM logs ORDER BY logID;";
-            String deleteLog = "DELETE FROM logs WHERE logID = ?";
+            final String sqlcreateTable = "CREATE TABLE IF NOT EXISTS logs(logID integer(100), logMessage varchar(10000));";
+            final String getLogs = "SELECT * FROM logs ORDER BY logID;";
+            final String deleteLog = "DELETE FROM logs WHERE logID = ?";
 
             // Create table
             PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);

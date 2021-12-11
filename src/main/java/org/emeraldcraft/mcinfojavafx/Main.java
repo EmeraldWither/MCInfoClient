@@ -168,6 +168,12 @@ public class Main extends Application {
                             }
                         }, 1000L, 1000L);
                     }
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Platform.runLater(controller::updateTimeElapsed);
+                        }
+                    }, 1000L, 1000L);
                     stage.setOnCloseRequest(windowEvent -> {
                         windowEvent.consume();
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

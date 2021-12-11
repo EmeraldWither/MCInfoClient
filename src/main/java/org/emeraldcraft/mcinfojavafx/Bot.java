@@ -14,8 +14,9 @@ public class Bot {
     private static JDA jda;
     private static Database database;
     private static Stage stage;
-    public static final String PROGRAM_VERSION = "1.1.2-STABLE";
+    public static final String PROGRAM_VERSION = "1.1.3-STABLE";
     public static final String AUTHOR = "EmerqldWither";
+    public static final Long START_TIME = System.currentTimeMillis();
 
     /**
      * @return The JDA bot instance.
@@ -62,7 +63,7 @@ public class Bot {
     }
     public static void createConfig(String path){
         File file = new File(path + "/config.properties");
-        SortedProperties sortedProperties  = new SortedProperties();
+        Properties sortedProperties  = new SortedProperties();
 
         // set the properties value
         sortedProperties.setProperty("bot.token", "bottokenhere");
@@ -77,12 +78,14 @@ public class Bot {
         String comments;
         comments =
                 """
-                README:
+                -------------------------------------------------------------------------------------------------------------------------
+                <!> READ ME <!>
                 Please note that enabling "console.messages.optimize", will only request when we know that the server is online.
                 It does this by using the cached data (you can do this by clicking the refresh button or a user querying the information)
                 Keeping this feature disabled will make the program query the database every second.
                 
                 You can use console.message to disable or enable requesting console messages. (Please use "true" or "false")
+                Made by EmerqldWither
                 --------------------------------------------------------------------------------------------------------------------------
                 """;
 
@@ -90,13 +93,16 @@ public class Bot {
             try (InputStream input = new FileInputStream(path + "/config.properties")) {
                 Properties prop = new Properties();
                 prop.load(input);
-
+                boolean changed = false;
                 for(String key : sortedProperties.stringPropertyNames()) {
+                    if(!changed) changed = true;
                     if (prop.getProperty(key) != null && !(prop.getProperty(key).isBlank())) continue;
                     prop.setProperty(key, sortedProperties.getProperty(key));
                 }
+                if(changed){
+                    prop.store(new FileOutputStream(path + "/config.properties"), comments);
+                }
 
-                prop.store(new FileOutputStream(path + "/config.properties"), comments);
                 config = prop;
 
             } catch (IOException ex) {

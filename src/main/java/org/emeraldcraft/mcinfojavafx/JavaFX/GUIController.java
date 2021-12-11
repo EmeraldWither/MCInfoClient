@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
@@ -46,6 +47,8 @@ public class GUIController  {
     private TextArea consoleTextArea;
     @FXML
     private Label versionLabel;
+    @FXML
+    private Label uptimeLabel;
 
     private Timer currentTimer;
 
@@ -163,5 +166,36 @@ public class GUIController  {
         for(String consoleMsg : consoleMessages){
             consoleTextArea.appendText(consoleMsg + "\n");
         }
+    }
+
+    public void updateTimeElapsed() {
+       Date startDate = Date.from(Instant.ofEpochMilli(Bot.START_TIME));
+       Date endDate = Date.from(Instant.ofEpochMilli(System.currentTimeMillis()));
+       long different = endDate.getTime() - startDate.getTime();
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+        String uptime = "Bot Uptime: " + getTime(elapsedDays, "day") + getTime(elapsedHours, "hour") + getTime(elapsedMinutes, "minute") + getTime(elapsedSeconds, "second");
+        uptimeLabel.setText(uptime);
+    }
+    private String getTime(long time, String timeType){
+        if(time > 0){
+            if(time == 1) return "1 " + timeType + " ";
+            return time +  " " + timeType + "s ";
+        }
+        return "";
     }
 }
