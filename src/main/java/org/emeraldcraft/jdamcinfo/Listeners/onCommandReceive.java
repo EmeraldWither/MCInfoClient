@@ -75,9 +75,5 @@ public class onCommandReceive extends ListenerAdapter {
                     Button.link("https://github.com/EmeraldWither/McINFO_Standalone", "Link to Github")).queue();
             lastRanCommand = (System.currentTimeMillis() + (cache * 1000L));
         }
-        if(event.getSubcommandName().equalsIgnoreCase("about")){
-            EmbedBuilder messageEmbed = new EmbedBuilder();
-            event.replyEmbeds(messageEmbed.build()).setEphemeral(false).queue();
-        }
     }
 }
