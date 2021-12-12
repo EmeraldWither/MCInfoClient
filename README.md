@@ -14,4 +14,5 @@ Features:
 - Send alerts when a server starts up and shuts down
 
 **REQUIRES A MYSQL COMPATIBLE DATABASE**
+
 **REQUIRES JAVA 16 OR ABOVE. SHOULD WORK ABOVE 1.17x BUT HAS NOT BEEN TESTED!**
