@@ -13,4 +13,5 @@ Features:
 - Send alerts when players leave or quit the server
 - Send alerts when a server starts up and shuts down
 
-**REQUIRES JAVA 16 OR ABOVE**
+**REQUIRES A MYSQL COMPATIBLE DATABASE**
+**REQUIRES JAVA 16 OR ABOVE. SHOULD WORK ABOVE 1.17x BUT HAS NOT BEEN TESTED!**
