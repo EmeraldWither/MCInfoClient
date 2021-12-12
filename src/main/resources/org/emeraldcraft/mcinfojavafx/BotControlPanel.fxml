@@ -101,7 +101,7 @@
       </Text>
       <TextArea fx:id="consoleTextArea" editable="false" layoutX="4.0" layoutY="186.0" prefHeight="132.0" prefWidth="594.0" promptText="Console messages will appear here (if enabled)" scrollTop="100000.0" wrapText="true" />
       <Label fx:id="versionLabel" alignment="CENTER" layoutX="213.0" layoutY="-1.0" prefHeight="17.0" prefWidth="160.0" text="v???" />
-      <Label fx:id="uptimeLabel" alignment="BOTTOM_RIGHT" layoutX="300.0" layoutY="154.0" prefHeight="32.0" prefWidth="300.0" text="Bot Uptime: ???">
+      <Label fx:id="uptimeLabel" alignment="BOTTOM_RIGHT" layoutX="215.0" layoutY="139.0" prefHeight="47.0" prefWidth="385.0" text="Bot Uptime: ???" wrapText="true">
          <font>
             <Font size="14.0" />
          </font>
