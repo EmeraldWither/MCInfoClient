@@ -52,20 +52,23 @@ public class Main {
             JDA bot = builder.build();
             bot.awaitReady();
             bot.addEventListener(new onCommandReceive());
-            boolean foundCommand = false;
-            for (Command command : bot.retrieveCommands().complete()) {
-                if (command.getName().equalsIgnoreCase("mcserver")) {
-                    foundCommand = true;
-                    break;
+            bot.retrieveCommands().queue(commands -> {
+                boolean foundCommand = false;
+                for (Command command : bot.retrieveCommands().complete()) {
+                    if (command.getName().equalsIgnoreCase("mcserver")) {
+                        foundCommand = true;
+                    }
                 }
-            }
-            if (!foundCommand) {
-                System.out.println("Had to upsert a command.");
-                Bot.getBot().upsertCommand("mcserver", "Minecraft Server command.")
-                        .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
-                        .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
-                        .queue();
-            }
+                if (!foundCommand) {
+                    System.out.println("Had to upsert a command.");
+                    Bot.getBot().upsertCommand("mcserver", "Minecraft Server command.")
+                            .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
+                            .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
+                            .queue();
+                }
+            });
+
+
             Bot Bot;
             Bot = new Bot();
             Bot.setJda(bot);
