@@ -64,15 +64,15 @@ public class GUIController  {
             serverInfo = Bot.getDatabase().getCachedServerInfo();
         }
 
-        serverTPSLabel.setText("" + serverInfo.getTps());
-        serverVersionLabel.setText("" + serverInfo.getMcVersion());
-        playerCountLabel.setText(serverInfo.getOnlinePlayers() + "/" + serverInfo.getMaxPlayers());
+        serverTPSLabel.setText("" + serverInfo.tps());
+        serverVersionLabel.setText("" + serverInfo.mcVersion());
+        playerCountLabel.setText(serverInfo.onlinePlayers() + "/" + serverInfo.maxPlayers());
 
         LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochMilli(Bot.getDatabase().lastDatabaseConnection()), ZoneId.systemDefault());
         String formattedDate = date.format(DateTimeFormatter.ofPattern("M/dd/uu K:mm:ss a"));
         lastDatabaseConnectionLabel.setText(formattedDate);
 
-        Bot.getStage().setTitle(serverInfo.getServerName() + "'s Discord Bot || Made by " + Bot.AUTHOR);
+        Bot.getStage().setTitle(serverInfo.serverName() + "'s Discord Bot || Made by " + Bot.AUTHOR);
 
         if(serverInfo.isOnline()){
             serverOnlineStatusLabel.setText("ONLINE");
@@ -197,5 +197,6 @@ public class GUIController  {
             return time +  " " + timeType + "s ";
         }
         return "";
+
     }
 }

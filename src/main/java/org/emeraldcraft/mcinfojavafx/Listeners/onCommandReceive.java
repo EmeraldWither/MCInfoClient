@@ -36,7 +36,7 @@ public class onCommandReceive extends ListenerAdapter {
                 return;
             }
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setAuthor(serverInfo.getServerName());
+            embedBuilder.setAuthor(serverInfo.serverName());
             embedBuilder.setTitle(":no_entry_sign:  Sorry, but the server is currently offline! :no_entry_sign: ");
             embedBuilder.setFooter("Results may be cached for up to " + cache + " seconds. \nMade by Bot.AUTHOR");
             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
@@ -56,20 +56,20 @@ public class onCommandReceive extends ListenerAdapter {
                 serverInfo = Bot.getDatabase().getServerInfo();
             }
 
-            messageEmbed.setAuthor(serverInfo.getServerName());
+            messageEmbed.setAuthor(serverInfo.serverName());
             if (serverInfo.isOnline()) {
                 messageEmbed.setColor(Color.GREEN);
                 messageEmbed.setDescription(
                                 "Server Status : **Online**\n" +
-                                "Online Players : **" + serverInfo.getOnlinePlayers() + "/" + serverInfo.getMaxPlayers() + "**\n" +
-                                "TPS : **" + serverInfo.getTps() + "**\n" +
-                                "Version : **" + serverInfo.getMcVersion() + "**");
+                                "Online Players : **" + serverInfo.onlinePlayers() + "/" + serverInfo.maxPlayers() + "**\n" +
+                                "TPS : **" + serverInfo.tps() + "**\n" +
+                                "Version : **" + serverInfo.mcVersion() + "**");
             } else {
                 messageEmbed.setColor(Color.RED);
                 messageEmbed.setDescription(
                                 "Server Status : **Offline**\n" +
-                                "Last Known Version : **" + serverInfo.getMcVersion() + "**\n" +
-                                "Last Known Max Players: **" + serverInfo.getMaxPlayers() + "**");
+                                "Last Known Version : **" + serverInfo.mcVersion() + "**\n" +
+                                "Last Known Max Players: **" + serverInfo.maxPlayers() + "**");
             }
             messageEmbed.setFooter("Results may be cached for up to " + cache + " seconds. \nMade by Bot.AUTHOR");
             event.replyEmbeds(messageEmbed.build()).setEphemeral(false).addActionRow(
