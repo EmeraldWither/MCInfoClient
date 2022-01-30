@@ -12,19 +12,14 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.emeraldcraft.mcinfojavafx.JavaFX.GUIController">
    <children>
-      <Text layoutX="456.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Bot Status: " wrappingWidth="146.20361328125">
+      <Text fx:id="checkTextBox" layoutX="405.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="196.20361328125">
          <font>
-            <Font size="16.0" />
+            <Font name="Lucida Console" size="13.0" />
          </font>
       </Text>
       <Label fx:id="usernameLabel" alignment="CENTER_RIGHT" layoutX="317.0" layoutY="370.0" prefHeight="30.0" prefWidth="282.0" text="Currently Logged in as: ????">
          <font>
             <Font name="HoloLens MDL2 Assets" size="13.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" layoutX="469.0" layoutY="24.0" prefHeight="37.0" prefWidth="112.0" text="ONLINE" textFill="#2bff00">
-         <font>
-            <Font name="HoloLens MDL2 Assets" size="27.0" />
          </font>
       </Label>
       <Text layoutX="22.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cached Server Information" wrappingWidth="196.20361328125">
@@ -89,7 +84,7 @@
          </font>
       </TextField>
       <Button fx:id="executeCommandButton" layoutX="363.0" layoutY="323.0" mnemonicParsing="false" onAction="#executeCommand" text="Execute Command" />
-      <Label fx:id="executeCommandResultLabel" alignment="CENTER" layoutX="213.0" layoutY="351.0" prefHeight="34.0" prefWidth="191.0" wrapText="true">
+      <Label fx:id="executeCommandResultLabel" alignment="CENTER" layoutX="198.0" layoutY="353.0" prefHeight="34.0" prefWidth="191.0" wrapText="true">
          <font>
             <Font size="11.0" />
          </font>

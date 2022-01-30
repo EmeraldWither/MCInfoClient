@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import org.emeraldcraft.mcinfojavafx.Bot;
 import org.emeraldcraft.mcinfojavafx.ServerInfo;
 
@@ -49,6 +50,8 @@ public class GUIController  {
     private Label versionLabel;
     @FXML
     private Label uptimeLabel;
+    @FXML
+    private Text checkTextBox;
 
     private Timer currentTimer;
 
@@ -166,6 +169,13 @@ public class GUIController  {
         for(String consoleMsg : consoleMessages){
             consoleTextArea.appendText(consoleMsg + "\n");
         }
+    }
+    public void setCheckingUpdates(boolean b){
+        if(b){
+            checkTextBox.setText("Checking for updates...");
+            return;
+        }
+        checkTextBox.setText("");
     }
 
     public void updateTimeElapsed() {

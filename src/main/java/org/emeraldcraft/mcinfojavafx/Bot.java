@@ -2,6 +2,7 @@ package org.emeraldcraft.mcinfojavafx;
 
 import javafx.stage.Stage;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.OnlineStatus;
 
 import java.io.*;
 import java.util.Collections;
@@ -14,15 +15,43 @@ public class Bot {
     private static JDA jda;
     private static Database database;
     private static Stage stage;
-    public static final String PROGRAM_VERSION = "1.1.3-STABLE";
+    public static final String PROGRAM_VERSION = "1.1.5-DEV";
     public static final String AUTHOR = "EmerqldWither";
+    public static final long GITHUB_REPO_ID = 409025455;
     public static final Long START_TIME = System.currentTimeMillis();
+    private static Stage updateStage;
 
     /**
      * @return The JDA bot instance.
      */
     public static JDA getBot(){
      return jda;
+    }
+    public static void shutdown(boolean restart) {
+        System.out.println("Shutting down now");
+        if (Bot.getBot() != null) {
+            Bot.getBot().getPresence().setStatus(OnlineStatus.IDLE);
+            Bot.getBot().shutdownNow();
+        }
+        if (Bot.getDatabase() != null) {
+            Bot.getDatabase().closeConnection();
+        }
+        System.out.println("The program has successfully shut down.");
+        if(restart){
+            System.out.println("Restarting...");
+            String runScriptLocation = System.getProperty("user.dir") + "/run.bat";
+            File file = new File(runScriptLocation);
+            if(file.canExecute()){
+                String path = "cmd /c start " + runScriptLocation;
+                try {
+                    Runtime.getRuntime().exec(path);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.exit(-1);
+                }
+            }
+        }
+        System.exit(0);
     }
 
     public static Database getDatabase() {
@@ -35,6 +64,13 @@ public class Bot {
      */
     public static Stage getStage() {
         return stage;
+    }
+    public static Stage getUpdateStage(){
+        return updateStage;
+    }
+
+    public static void setUpdateStage(Stage updateStage) {
+        Bot.updateStage = updateStage;
     }
 
     public void setStage(Stage stage) {
@@ -121,7 +157,6 @@ public class Bot {
             io.printStackTrace();
         }
     }
-
     private static class SortedProperties extends Properties {
         public Enumeration keys() {
             Enumeration keysEnum = super.keys();

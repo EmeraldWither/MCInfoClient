@@ -15,8 +15,11 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.emeraldcraft.mcinfojavafx.Github.AutoUpdater;
 import org.emeraldcraft.mcinfojavafx.JavaFX.GUIController;
+import org.emeraldcraft.mcinfojavafx.JavaFX.UpdateWindowController;
 import org.emeraldcraft.mcinfojavafx.Listeners.onCommandReceive;
+import org.kohsuke.github.GHRelease;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -132,18 +135,27 @@ public class Main extends Application {
                 e.printStackTrace();
                 shutdown();
             }
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("BotControlPanel.fxml"));
+            FXMLLoader controlPanel = new FXMLLoader(Main.class.getResource("BotControlPanel.fxml"));
+            FXMLLoader updateWindow = new FXMLLoader(Main.class.getResource("UpdateWindow.fxml"));
             Platform.runLater(() -> {
                 try {
-                    Scene scene = new Scene(fxmlLoader.load(), 603, 400);
+                    //Manage normal control panel scene stuff
+                    Scene scene = new Scene(controlPanel.load(), 603, 400);
                     stage.setResizable(false);
                     stage.setOnCloseRequest(windowEvent -> shutdown());
                     stage.getIcons().clear();
                     stage.getIcons().add(new Image("icon.png"));
                     Bot.getStage().setScene(scene);
+                    //Do update stuff
+                    Stage updateStage = new Stage();
+                    Scene updateScene = new Scene(updateWindow.load());
+                    updateStage.setResizable(false);
+                    updateStage.setScene(updateScene);
+                    Bot.setUpdateStage(updateStage);
 
                     Timer timer = new Timer();
-                    GUIController controller = fxmlLoader.getController();
+                    GUIController controller = controlPanel.getController();
+                    UpdateWindowController updateController = updateWindow.getController();
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
@@ -168,6 +180,27 @@ public class Main extends Application {
                             }
                         }, 1000L, 1000L);
                     }
+                    //Run every hour
+                    updateController.provideController(controller);
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                GHRelease release = AutoUpdater.hasUpdate();
+                                Platform.runLater(() -> {
+                                    if (release != null) {
+                                        System.out.println("There was an update.");
+                                        Bot.getUpdateStage().show();
+                                        updateController.promptUser(release);
+                                        return;
+                                    }
+                                    System.out.println("There was no update.");
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, 5000L, 3600000L);
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
@@ -200,16 +233,7 @@ public class Main extends Application {
     }
 
     public static void shutdown() {
-        System.out.println("Shutting down now");
-        if (Bot.getBot() != null) {
-            Bot.getBot().getPresence().setStatus(OnlineStatus.IDLE);
-            Bot.getBot().shutdownNow();
-        }
-        if (Bot.getDatabase() != null) {
-            Bot.getDatabase().closeConnection();
-        }
-        System.out.println("The program has successfully shut down.");
-        System.exit(0);
+        Bot.shutdown(false);
     }
 
     public static void checkCommand() {
@@ -222,7 +246,7 @@ public class Main extends Application {
             shutdown();
             return;
         }
-        else if (response.equalsIgnoreCase("upsertcommand")) {
+        if (response.equalsIgnoreCase("upsertcommand")) {
             System.out.println("Attempting to upsert the command. ");
             Bot.getBot().upsertCommand("mcserver", "Minecraft Server command.")
                     .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
