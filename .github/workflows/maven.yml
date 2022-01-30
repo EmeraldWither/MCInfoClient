@@ -10,9 +10,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
@@ -20,11 +18,11 @@ jobs:
           java-version: '16'
           distribution: 'adopt'
       - name: Build with Maven
-        run: mvn package -f pom.xml
+        run: mvn package
       - name : Copy plugin to upload
-        run: mkdir staging && cp target/*.jar staging
-      - name : Upload plugin
+        run: mkdir software && cp target/*.jar staging
+      - name : Upload software
         uses: actions/upload-artifact@v2
         with:
           name: JavaFX GUI
-          path: staging
+          path: software
