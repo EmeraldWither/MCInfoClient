@@ -36,6 +36,7 @@ public class AutoUpdater {
         }
         if(release.isPrerelease()){
             System.out.println("There is no releases to downloads (latest is pre-release).");
+            return null;
         }
         String tag = release.getTagName();
         if(!tag.endsWith("-javafx")){
