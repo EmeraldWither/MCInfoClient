@@ -74,7 +74,7 @@
                                 </transformer>
                             </transformers>
                             <outputFile>${outputDirectory}/${artifactId}-${version}-runme.jar</outputFile>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
                         </configuration>
                     </execution>
                 </executions>
