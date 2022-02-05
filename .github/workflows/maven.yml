@@ -18,7 +18,9 @@ jobs:
           java-version: '16'
           distribution: 'adopt'
       - name: Build with Maven
-        run: mvn package
+        run: |
+           mvn -version
+           mvn package
       - name : Copy plugin to upload
         run: mkdir software && cp target/*.jar software
       - name : Upload software
