@@ -74,7 +74,7 @@
                                 </transformer>
                             </transformers>
                             <outputFile>${outputDirectory}/${artifactId}-${version}-runme.jar</outputFile>
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
                             <minimizeJar>true</minimizeJar>
                             <filter>
                                 <artifact>org.openjfx</artifact>
