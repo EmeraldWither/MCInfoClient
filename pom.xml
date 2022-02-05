@@ -75,6 +75,13 @@
                             </transformers>
                             <outputFile>${outputDirectory}/${artifactId}-${version}-runme.jar</outputFile>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <minimizeJar>true</minimizeJar>
+                            <filter>
+                                <artifact>org.openjfx</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                            </filter>
                         </configuration>
                     </execution>
                 </executions>
